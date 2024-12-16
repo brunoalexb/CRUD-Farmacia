@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.generation.farmacia.model.Produto;
 import com.generation.farmacia.repository.CategoriaRepository;
 import com.generation.farmacia.repository.ProdutoRepository;
+import com.generation.farmacia.service.ProdutoService;
 
 import jakarta.validation.Valid;
 
@@ -35,6 +37,9 @@ public class ProdutoController {
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+    @Autowired
+    private ProdutoService produtoService;
 	
 	@GetMapping
 	public ResponseEntity<List<Produto>> getAll(){
@@ -61,6 +66,12 @@ public class ProdutoController {
 	public ResponseEntity<List<Produto>> getByDescricao(@PathVariable String descricao){
 		return ResponseEntity.ok(produtoRepository.findAllByDescricaoContainingIgnoreCase(descricao));
 	}
+
+	@GetMapping("/produtos/preco-maximo")
+	public ResponseEntity<List<Produto>> getProdutosPorPrecoMaximo(@RequestParam double preco) {
+	    return ResponseEntity.ok(produtoService.buscarPorPrecoMaximo(preco));
+	 }
+	
 	
 	@PostMapping
 	public ResponseEntity<Produto> post(@Valid  @RequestBody Produto produto ){
